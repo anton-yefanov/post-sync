@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export default function HeroSection() {
+  const session = useSession();
   const imageSrc = "/js-chan.png";
 
   return (
@@ -23,12 +25,18 @@ export default function HeroSection() {
             </p>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
               <Link
-                href="/login"
-                className={cn(
-                  buttonVariants({ variant: "default", size: "lg" }),
-                )}
+                href={
+                  session.status === "authenticated"
+                    ? DEFAULT_LOGIN_REDIRECT
+                    : "/login"
+                }
               >
-                Get Started <ArrowRight className="h-4 w-4" />
+                <Button size="lg" disabled={session.status === "loading"}>
+                  {session.status === "authenticated"
+                    ? "Continue"
+                    : "Get Started"}
+                  <ArrowRight className="size-4" />
+                </Button>
               </Link>
               <Button size="lg" variant="outline">
                 See Demo

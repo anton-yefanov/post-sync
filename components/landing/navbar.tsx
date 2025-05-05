@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { ThemeSelect } from "../theme-select";
 import {
@@ -14,9 +14,12 @@ import {
   DrawerTrigger,
 } from "../ui/drawer";
 import { config } from "@/config";
-import { cn } from "@/lib/utils";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { useSession } from "next-auth/react";
 
 export default function Navbar() {
+  const session = useSession();
+
   return (
     <header className="w-full border-b absolute top-0 z-40">
       <div className="container px-4 md:px-6 mx-auto">
@@ -37,10 +40,19 @@ export default function Navbar() {
           </nav>
           <div className="hidden md:flex items-center space-x-2">
             <Link
-              href="/login"
-              className={cn(buttonVariants({ variant: "outline" }))}
+              href={
+                session.status === "authenticated"
+                  ? DEFAULT_LOGIN_REDIRECT
+                  : "/login"
+              }
             >
-              Log In
+              <Button
+                size="lg"
+                variant="outline"
+                disabled={session.status === "loading"}
+              >
+                {session.status === "authenticated" ? "Continue" : "Log In"}
+              </Button>
             </Link>
             <ThemeSelect />
           </div>
@@ -66,13 +78,20 @@ export default function Navbar() {
               </div>
               <DrawerFooter>
                 <Link
-                  href="/login"
-                  className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "w-full",
-                  )}
+                  href={
+                    session.status === "authenticated"
+                      ? DEFAULT_LOGIN_REDIRECT
+                      : "/login"
+                  }
                 >
-                  Log In
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full"
+                    disabled={session.status === "loading"}
+                  >
+                    {session.status === "authenticated" ? "Continue" : "Log In"}
+                  </Button>
                 </Link>
               </DrawerFooter>
             </DrawerContent>
