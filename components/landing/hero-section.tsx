@@ -1,9 +1,14 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default function HeroSection() {
+  const imageSrc = "/js-chan.png";
+
   return (
     <section className="w-full py-24 lg:py-32">
       <div className="container px-4 md:px-6 mx-auto">
@@ -17,23 +22,28 @@ export default function HeroSection() {
               your platforms with a single click.
             </p>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
-              <Button size="lg" className="gap-2">
+              <Link
+                href="/login"
+                className={cn(
+                  buttonVariants({ variant: "default", size: "lg" }),
+                )}
+              >
                 Get Started <ArrowRight className="h-4 w-4" />
-              </Button>
+              </Link>
               <Button size="lg" variant="outline">
                 See Demo
               </Button>
             </div>
           </div>
-          <div className="mx-auto lg:mx-0 relative">
-            <div className="relative w-full h-[300px] md:h-[400px] lg:h-[500px] rounded-lg shadow-xl overflow-hidden">
-              <div className="absolute inset-0 backdrop-blur-sm">
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                  <p className="text-xl font-medium">Dashboard Preview</p>
-                  <p className="text-sm">Image placeholder</p>
-                </div>
-              </div>
-            </div>
+          <div className="relative w-full h-[300px] md:h-[400px] lg:h-[500px] rounded-lg shadow-xl overflow-hidden">
+            <Image
+              src={imageSrc}
+              alt="Dashboard Preview"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority
+            />
           </div>
         </div>
       </div>
