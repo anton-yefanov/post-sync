@@ -35,10 +35,15 @@ export default function Page() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
+          disabled
+          placeholder="Пока не работает"
           className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2"
         />
-        <Button size="lg" className="w-full p-4 rounded-lg text-white mt-2">
+        <Button
+          size="lg"
+          className="w-full p-4 rounded-lg text-white mt-2"
+          disabled
+        >
           Sign up with email
         </Button>
       </Card>

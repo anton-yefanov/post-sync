@@ -6,6 +6,6 @@ export const publicRoutes = [
   "/api/webhook",
 ];
 
-export const DEFAULT_LOGIN_REDIRECT = "/projects";
+export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
 
 export const DEFAULT_UNAUTHORIZED_REDIRECT = "/";
