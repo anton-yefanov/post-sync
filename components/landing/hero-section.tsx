@@ -9,7 +9,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export default function HeroSection() {
   const session = useSession();
-  const imageSrc = "/js-chan.png";
+  const imageSrc = "/hero-image.png";
 
   return (
     <section className="w-full py-24 lg:py-32">
