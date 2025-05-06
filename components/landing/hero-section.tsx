@@ -38,9 +38,6 @@ export default function HeroSection() {
                   <ArrowRight className="size-4" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline">
-                See Demo
-              </Button>
             </div>
           </div>
           <div className="relative w-full h-[300px] md:h-[400px] lg:h-[500px] rounded-lg shadow-xl overflow-hidden">

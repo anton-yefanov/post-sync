@@ -4,14 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PaddlePrices } from "@/components/pricing/usePaddlePrices";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-react";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { config } from "@/config";
 
 interface TiersPricingProps {
@@ -30,8 +23,6 @@ export function TiersPricing({
     router.push(`/checkout/${priceId}`);
   };
 
-  const savingsPercentage = 10;
-
   return (
     <div className="flex flex-col items-center gap-8 py-8">
       <div className="inline-flex gap-2 items-center justify-center p-1 border rounded-lg bg-background">
@@ -48,12 +39,6 @@ export function TiersPricing({
           className="rounded-md min-w-[160px]"
         >
           Yearly
-          <Badge
-            variant="outline"
-            className="ml-2 bg-green-100 text-green-800 hover:bg-green-100"
-          >
-            Save {savingsPercentage}%
-          </Badge>
         </Button>
       </div>
 
