@@ -2,9 +2,9 @@ import Navbar from "@/components/landing/navbar";
 import HeroSection from "@/components/landing/hero-section";
 import AboutSection from "@/components/landing/about-section";
 import TestimonialsSection from "@/components/landing/testimonials-section";
-import PricingSection from "@/components/landing/pricing-section";
 import FaqSection from "@/components/landing/faq-section";
 import Footer from "@/components/landing/footer";
+import { PricingController } from "@/components/pricing/pricing-controller";
 
 export default function LandingPage() {
   return (
@@ -14,7 +14,7 @@ export default function LandingPage() {
         <HeroSection />
         <AboutSection />
         <TestimonialsSection />
-        <PricingSection />
+        <PricingController />
         <FaqSection />
       </main>
       <Footer />
