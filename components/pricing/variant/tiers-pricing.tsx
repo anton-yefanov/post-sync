@@ -4,15 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PaddlePrices } from "@/components/pricing/usePaddlePrices";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-react";
 import { config } from "@/config";
+import { useSession } from "next-auth/react";
+import { storeCheckoutRedirect } from "@/utils/redirectState";
 
 interface TiersPricingProps {
   prices?: PaddlePrices;
@@ -23,11 +19,17 @@ export function TiersPricing({
   prices = {},
   loading = false,
 }: TiersPricingProps) {
+  const session = useSession();
   const [billingPeriod, setBillingPeriod] = useState<"month" | "year">("month");
   const router = useRouter();
 
   const handleGetStarted = (priceId: string) => {
-    router.push(`/checkout/${priceId}`);
+    if (session.status === "authenticated") {
+      router.push(`/checkout/${priceId}`);
+    } else {
+      storeCheckoutRedirect(priceId);
+      router.push("/login");
+    }
   };
 
   const savingsPercentage = 10;
@@ -97,17 +99,6 @@ export function TiersPricing({
                 </div>
               </CardHeader>
 
-              {/*<CardContent className="flex-1">*/}
-              {/*  <ul className="space-y-2">*/}
-              {/*    {tier.benefits?.map((benefit) => (*/}
-              {/*      <li key={benefit} className="flex items-center">*/}
-              {/*        <Check className="h-5 w-5 text-green-500 mr-2" />*/}
-              {/*        <span>{benefit}</span>*/}
-              {/*      </li>*/}
-              {/*    ))}*/}
-              {/*  </ul>*/}
-              {/*</CardContent>*/}
-
               <CardFooter>
                 <Button
                   onClick={() => handleGetStarted(priceId)}
@@ -115,7 +106,9 @@ export function TiersPricing({
                   variant={tier.name === "Growth" ? "default" : "outline"}
                   className="w-full"
                 >
-                  {loading ? "Loading..." : "Get Started"}
+                  {loading || session.status === "loading"
+                    ? "Loading..."
+                    : "Get Started"}
                 </Button>
               </CardFooter>
             </Card>

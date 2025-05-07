@@ -6,14 +6,19 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import GoogleIcon from "@/public/icons/google-icon.svg";
+import { getStoredCheckoutPriceId } from "@/utils/redirectState";
 
 export const GoogleButton = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onClickGoogleButton = () => {
     setIsLoading(true);
+    const storedPriceId = getStoredCheckoutPriceId();
+
     signIn("google", {
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
+      redirectTo: storedPriceId
+        ? `/checkout/${storedPriceId}`
+        : DEFAULT_LOGIN_REDIRECT,
     }).finally(() => setIsLoading(false));
   };
 

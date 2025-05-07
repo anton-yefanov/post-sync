@@ -3,28 +3,28 @@ import {
   EventName,
   SubscriptionActivatedEvent,
   SubscriptionUpdatedEvent,
-  SubscriptionCanceledEvent,
+  SubscriptionTrialingEvent,
 } from "@paddle/paddle-node-sdk";
+import { connectToDatabase } from "@/lib/database/connectToDatabase";
 
 export class ProcessWebhook {
   async processEvent(eventData: EventEntity) {
     switch (eventData.eventType) {
       case EventName.SubscriptionActivated:
       case EventName.SubscriptionUpdated:
+      case EventName.SubscriptionTrialing:
         await this.updateSubscriptionData(eventData);
         break;
-      case EventName.SubscriptionCanceled:
-        await this.handleCancelSubscription(eventData);
     }
   }
 
   private async updateSubscriptionData(
-    eventData: SubscriptionActivatedEvent | SubscriptionUpdatedEvent,
+    eventData:
+      | SubscriptionActivatedEvent
+      | SubscriptionUpdatedEvent
+      | SubscriptionTrialingEvent,
   ) {
-    console.log(eventData);
-  }
-
-  private async handleCancelSubscription(eventData: SubscriptionCanceledEvent) {
-    console.log(eventData);
+    await connectToDatabase();
+    console.log(eventData.data);
   }
 }
