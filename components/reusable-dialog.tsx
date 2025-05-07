@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -12,21 +13,19 @@ import {
 } from "@/components/ui/dialog";
 
 interface ReusableDialogProps {
-  buttonLabel: string;
+  children: React.ReactNode;
   title: string;
   description: string;
 }
 
 export const ReusableDialog = ({
-  buttonLabel,
+  children,
   title,
   description,
 }: ReusableDialogProps) => {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button className="h-8">{buttonLabel}</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent className="pt-5 pb-3">
         <DialogHeader>

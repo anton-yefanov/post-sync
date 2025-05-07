@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import GoogleIcon from "@/public/icons/google-icon.svg";
+import { GoogleIcon } from "@/public/icons";
 
 export const GoogleButton = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
