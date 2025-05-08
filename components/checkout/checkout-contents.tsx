@@ -9,17 +9,18 @@ import type { CheckoutEventsData } from "@paddle/paddle-js/types/checkout/events
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PriceSection } from "@/components/checkout/price-section";
+import { clearStoredCheckoutPriceId } from "@/utils/redirectState";
+import { useSession } from "next-auth/react";
 
 interface PathParams {
   priceId: string;
   [key: string]: string | string[];
 }
 
-interface Props {
-  userEmail?: string | null;
-}
-
-export function CheckoutContents({ userEmail }: Props) {
+export function CheckoutContents() {
+  const session = useSession();
+  const userId = session.data?.user?.id;
+  const userEmail = session.data?.user?.email;
   const { priceId } = useParams<PathParams>();
   const [paddle, setPaddle] = useState<Paddle | null>(null);
   const [checkoutData, setCheckoutData] = useState<CheckoutEventsData | null>(
@@ -29,6 +30,10 @@ export function CheckoutContents({ userEmail }: Props) {
   const handleCheckoutEvents = (event: CheckoutEventsData) => {
     setCheckoutData(event);
   };
+
+  useEffect(() => {
+    clearStoredCheckoutPriceId();
+  }, []);
 
   useEffect(() => {
     if (
@@ -54,7 +59,7 @@ export function CheckoutContents({ userEmail }: Props) {
             frameInitialHeight: 450,
             frameStyle:
               "width: 100%; background-color: transparent; border: none",
-            successUrl: "/checkout/success",
+            successUrl: "/",
           },
         },
       }).then(async (paddle) => {
@@ -63,6 +68,9 @@ export function CheckoutContents({ userEmail }: Props) {
           paddle.Checkout.open({
             ...(userEmail && { customer: { email: userEmail } }),
             items: [{ priceId: priceId, quantity: 1 }],
+            customData: {
+              userId: userId,
+            },
           });
         }
       });

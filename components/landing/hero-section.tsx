@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import Statuses from "./statuses";
 
 export default function HeroSection() {
   const session = useSession();
@@ -16,6 +17,7 @@ export default function HeroSection() {
       <div className="container px-4 md:px-6 mx-auto">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
           <div className="space-y-4">
+            <Statuses />
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
               One Tool for All Your Social Media Posting
             </h1>

@@ -3,10 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { config } from "@/config";
+import { useRouter } from "next/navigation";
 
 export function CheckoutHeader() {
+  const router = useRouter();
+
   const handleGoBack = () => {
-    window.history.back();
+    router.push("/");
   };
 
   return (

@@ -3,8 +3,9 @@ import {
   EventName,
   SubscriptionActivatedEvent,
   SubscriptionUpdatedEvent,
-  SubscriptionCanceledEvent,
 } from "@paddle/paddle-node-sdk";
+import { connectToDatabase } from "@/lib/database/connectToDatabase";
+import { User } from "@/models/user/User";
 
 export class ProcessWebhook {
   async processEvent(eventData: EventEntity) {
@@ -13,18 +14,32 @@ export class ProcessWebhook {
       case EventName.SubscriptionUpdated:
         await this.updateSubscriptionData(eventData);
         break;
-      case EventName.SubscriptionCanceled:
-        await this.handleCancelSubscription(eventData);
     }
   }
 
   private async updateSubscriptionData(
     eventData: SubscriptionActivatedEvent | SubscriptionUpdatedEvent,
   ) {
-    console.log(eventData);
-  }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const userId = eventData.data.customData!.userId;
+    const { id, status, customerId, items } = eventData.data;
+    const item = items[0];
 
-  private async handleCancelSubscription(eventData: SubscriptionCanceledEvent) {
-    console.log(eventData);
+    await connectToDatabase();
+
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        subscription: {
+          id,
+          status,
+          customerId,
+          productId: item.product?.id,
+          priceId: item.price?.id,
+        },
+      },
+      { new: true, runValidators: true },
+    );
   }
 }

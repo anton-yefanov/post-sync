@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import type { PaddlePrices } from "@/components/pricing/usePaddlePrices";
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { config } from "@/config";
+import { useSession } from "next-auth/react";
+import { storeCheckoutRedirect } from "@/utils/redirectState";
 
 interface TiersPricingProps {
   prices?: PaddlePrices;
@@ -16,12 +19,20 @@ export function TiersPricing({
   prices = {},
   loading = false,
 }: TiersPricingProps) {
+  const session = useSession();
   const [billingPeriod, setBillingPeriod] = useState<"month" | "year">("month");
   const router = useRouter();
 
   const handleGetStarted = (priceId: string) => {
-    router.push(`/checkout/${priceId}`);
+    if (session.status === "authenticated") {
+      router.push(`/checkout/${priceId}`);
+    } else {
+      storeCheckoutRedirect(priceId);
+      router.push("/login");
+    }
   };
+
+  const savingsPercentage = 10;
 
   return (
     <div className="flex flex-col items-center gap-8 py-8">
@@ -39,12 +50,18 @@ export function TiersPricing({
           className="rounded-md min-w-[160px]"
         >
           Yearly
+          <Badge
+            variant="outline"
+            className="ml-2 bg-green-100 text-green-800 hover:bg-green-100"
+          >
+            Save {savingsPercentage}%
+          </Badge>
         </Button>
       </div>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3 w-full max-w-6xl">
-        {config.paddle.pricingTier.map((tier) => {
-          const priceId = tier.priceId[billingPeriod];
+        {config.paddle.products.map((product) => {
+          const priceId = product.priceId[billingPeriod];
           const price = prices[priceId] || (loading ? "Loading..." : "N/A");
 
           let displayPrice = price;
@@ -64,9 +81,9 @@ export function TiersPricing({
           }
 
           return (
-            <Card key={tier.name} className="flex flex-col shadow-sm">
+            <Card key={product.name} className="flex flex-col shadow-sm">
               <CardHeader>
-                <h3 className="text-xl font-bold">{tier.name}</h3>
+                <h3 className="text-xl font-bold">{product.name}</h3>
                 <div className="mt-2">
                   <div className="text-3xl font-bold">
                     {displayPrice}
@@ -82,25 +99,15 @@ export function TiersPricing({
                 </div>
               </CardHeader>
 
-              {/*<CardContent className="flex-1">*/}
-              {/*  <ul className="space-y-2">*/}
-              {/*    {tier.benefits?.map((benefit) => (*/}
-              {/*      <li key={benefit} className="flex items-center">*/}
-              {/*        <Check className="h-5 w-5 text-green-500 mr-2" />*/}
-              {/*        <span>{benefit}</span>*/}
-              {/*      </li>*/}
-              {/*    ))}*/}
-              {/*  </ul>*/}
-              {/*</CardContent>*/}
-
               <CardFooter>
                 <Button
                   onClick={() => handleGetStarted(priceId)}
                   disabled={loading}
-                  variant={tier.name === "Growth" ? "default" : "outline"}
                   className="w-full"
                 >
-                  {loading ? "Loading..." : "Get Started"}
+                  {loading || session.status === "loading"
+                    ? "Loading..."
+                    : "Get Started"}
                 </Button>
               </CardFooter>
             </Card>
