@@ -60,8 +60,8 @@ export function TiersPricing({
       </div>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3 w-full max-w-6xl">
-        {config.paddle.pricingTier.map((tier) => {
-          const priceId = tier.priceId[billingPeriod];
+        {config.paddle.products.map((product) => {
+          const priceId = product.priceId[billingPeriod];
           const price = prices[priceId] || (loading ? "Loading..." : "N/A");
 
           let displayPrice = price;
@@ -81,9 +81,9 @@ export function TiersPricing({
           }
 
           return (
-            <Card key={tier.name} className="flex flex-col shadow-sm">
+            <Card key={product.name} className="flex flex-col shadow-sm">
               <CardHeader>
-                <h3 className="text-xl font-bold">{tier.name}</h3>
+                <h3 className="text-xl font-bold">{product.name}</h3>
                 <div className="mt-2">
                   <div className="text-3xl font-bold">
                     {displayPrice}
@@ -103,7 +103,6 @@ export function TiersPricing({
                 <Button
                   onClick={() => handleGetStarted(priceId)}
                   disabled={loading}
-                  variant={tier.name === "Growth" ? "default" : "outline"}
                   className="w-full"
                 >
                   {loading || session.status === "loading"

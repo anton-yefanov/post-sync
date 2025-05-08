@@ -9,9 +9,9 @@ import { config } from "@/config";
 export type PaddlePrices = Record<string, string>;
 
 function getLineItems(): PricePreviewParams["items"] {
-  const priceId = config.paddle.pricingTier.map((tier) => [
-    tier.priceId.month,
-    tier.priceId.year,
+  const priceId = config.paddle.products.map((product) => [
+    product.priceId.month,
+    product.priceId.year,
   ]);
   return priceId.flat().map((priceId) => ({ priceId, quantity: 1 }));
 }
